@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: ./auth-service
+    expose:
+      - "8081"
+    networks:
+      - backend
+
+  user-service:
+    build: ./user-service
+    expose:
+      - "8082"
+    networks:
+      - backend
+
+  card-service:
+    build: ./card-service
+    expose:
+      - "8083"
+    networks:
+      - backend
+
+  gencard-service:
+    build: ./gencard-service
+    expose:
+      - "8084"
+    networks:
+      - backend
+
+  shop-service:
+    build: ./shop-service
+    expose:
+      - "8085"
+    networks:
+      - backend
+
+  web-service:
+    build: ./static
+    ports:
+      - "8086:8086"
+    networks:
+      - backend
+
+  nginx:
+    build: ./conf/reverse-proxy
+    ports:
+      - "8080:80"
+    depends_on:
+      - auth-service
+      - user-service
+      - card-service
+      - gencard-service
+      - shop-service
+      - web-service
+    networks:
+      - backend
+
+networks:
+  backend:
